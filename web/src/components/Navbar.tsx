@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingBag, User, Search, Menu, X } from "lucide-react";
 import { useCart, selectCount } from "../store/cart";
@@ -119,44 +120,48 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Mobile drawer */}
-      {menuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div
-            className="absolute inset-0 bg-ink/30 animate-fade"
-            onClick={() => setMenuOpen(false)}
-          />
-          <div className="absolute left-0 top-0 flex h-full w-72 max-w-[82%] flex-col bg-paper p-6">
-            <div className="flex items-center justify-between">
-              <span className="font-display text-lg font-extrabold tracking-[0.08em] uppercase">
-                AUG DEPT.
-              </span>
-              <button onClick={() => setMenuOpen(false)} aria-label="Close menu">
-                <X size={22} />
-              </button>
-            </div>
-            <nav className="mt-10 flex flex-col">
-              {navLinks.map((l) => (
-                <Link
-                  key={l.to}
-                  to={l.to}
-                  onClick={() => setMenuOpen(false)}
-                  className="border-b border-line py-3.5 text-lg"
-                >
-                  {l.label}
-                </Link>
-              ))}
-            </nav>
-            <Link
-              to={user ? "/account" : "/login"}
+      {/* Mobile drawer — portaled to <body>. The header's `backdrop-blur`
+          makes it a containing block for fixed elements, which would
+          otherwise clip this overlay to the 64px header box. */}
+      {menuOpen &&
+        createPortal(
+          <div className="fixed inset-0 z-50 lg:hidden">
+            <div
+              className="absolute inset-0 bg-black/60 animate-fade"
               onClick={() => setMenuOpen(false)}
-              className="mt-auto py-2 text-graphite"
-            >
-              {user ? `Account — ${user.name}` : "Sign in"}
-            </Link>
-          </div>
-        </div>
-      )}
+            />
+            <div className="absolute left-0 top-0 flex h-full w-72 max-w-[82%] flex-col bg-paper p-6">
+              <div className="flex items-center justify-between">
+                <span className="font-display text-lg font-extrabold tracking-[0.08em] uppercase">
+                  AUG DEPT.
+                </span>
+                <button onClick={() => setMenuOpen(false)} aria-label="Close menu">
+                  <X size={22} />
+                </button>
+              </div>
+              <nav className="mt-10 flex flex-col">
+                {navLinks.map((l) => (
+                  <Link
+                    key={l.to}
+                    to={l.to}
+                    onClick={() => setMenuOpen(false)}
+                    className="border-b border-line py-3.5 text-lg"
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </nav>
+              <Link
+                to={user ? "/account" : "/login"}
+                onClick={() => setMenuOpen(false)}
+                className="mt-auto py-2 text-graphite"
+              >
+                {user ? `Account — ${user.name}` : "Sign in"}
+              </Link>
+            </div>
+          </div>,
+          document.body,
+        )}
     </header>
   );
 }
