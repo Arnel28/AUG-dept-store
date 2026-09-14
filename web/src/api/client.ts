@@ -1,7 +1,9 @@
 import type { Product, Order, User, AdminStats, AdminOrder } from "../types";
 
-const BASE = "/api";
-const TOKEN_KEY = "verve_token";
+const BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, "")}/api`
+  : "/api";
+const TOKEN_KEY = "aug_dept_token";
 
 export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
