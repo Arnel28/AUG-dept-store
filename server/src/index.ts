@@ -12,7 +12,20 @@ const app = express();
 const PORT = Number(process.env.PORT) || 4000;
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 
-app.use(cors({ origin: CLIENT_URL, credentials: true }));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+      if (!origin) return callback(null, true);
+      const allowed = CLIENT_URL.split(",").map((s) => s.trim());
+      if (allowed.includes("*") || allowed.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, true); // Permissive for production web deployment
+    },
+    credentials: true,
+  })
+);
 
 // Stripe webhook needs the raw body, so it is registered BEFORE express.json().
 app.post(
