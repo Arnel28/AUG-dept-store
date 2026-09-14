@@ -1,0 +1,37 @@
+services:
+  # --- Backend API Service ---
+  - type: web
+    name: aug-dept-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm install && npx prisma generate && npx prisma db push && npx tsx prisma/seed.ts && npx tsx prisma/create-admin.ts
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        value: "file:./dev.db"
+      - key: CLIENT_URL
+        value: "*"
+
+  # --- Frontend Static Site ---
+  - type: web
+    name: aug-dept-web
+    runtime: static
+    rootDir: web
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: aug-dept-api
+          property: host
