@@ -149,7 +149,7 @@ export default function AdminDashboard() {
           </Link>
         </div>
 
-        <div className="border border-line rounded overflow-hidden bg-surface/20">
+        <div className="hidden md:block border border-line rounded overflow-hidden bg-surface/20">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
               <thead className="bg-surface border-b border-line text-muted uppercase">
@@ -203,6 +203,50 @@ export default function AdminDashboard() {
               </tbody>
             </table>
           </div>
+        </div>
+
+        {/* Mobile card list */}
+        <div className="md:hidden space-y-3">
+          {recentOrders.length === 0 ? (
+            <div className="p-6 text-center text-muted text-xs font-mono border border-line rounded bg-surface/20">
+              No customer orders recorded yet.
+            </div>
+          ) : (
+            recentOrders.map((order) => (
+              <div
+                key={order.id}
+                className="border border-line rounded bg-surface/20 p-4 font-mono space-y-2"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-ink font-medium text-sm">#{order.id.slice(-8)}</span>
+                  <span
+                    className={`inline-block px-2 py-0.5 text-[10px] uppercase rounded border ${
+                      order.status === "paid" || order.status === "complete"
+                        ? "border-emerald-500/40 text-emerald-400 bg-emerald-500/10"
+                        : order.status === "shipped"
+                        ? "border-blue-500/40 text-blue-400 bg-blue-500/10"
+                        : order.status === "pending"
+                        ? "border-amber-500/40 text-amber-400 bg-amber-500/10"
+                        : "border-line text-muted bg-surface"
+                    }`}
+                  >
+                    {order.status}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-2 text-[11px]">
+                  <div className="min-w-0">
+                    <p className="text-muted truncate">
+                      {order.shippingName || order.user?.name || "Guest"}
+                    </p>
+                    <p className="text-muted/70 truncate">{order.email}</p>
+                  </div>
+                  <span className="text-ink font-medium shrink-0">
+                    {formatCents(order.total)}
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

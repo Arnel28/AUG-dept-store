@@ -13,8 +13,54 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-paper text-ink flex flex-col md:flex-row antialiased selection:bg-black selection:text-white">
-      {/* Sidebar */}
-      <aside className="w-full md:w-64 border-b md:border-b-0 md:border-r border-line bg-surface/40 flex flex-col justify-between shrink-0">
+      {/* Mobile top bar — compact header + horizontal scrollable tabs */}
+      <header className="md:hidden sticky top-0 z-30 border-b border-line bg-surface/95 backdrop-blur">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="min-w-0">
+            <Link
+              to="/"
+              className="font-display font-semibold text-base tracking-[0.12em] uppercase text-ink"
+            >
+              AUG DEPT.
+            </Link>
+            <span className="block text-[9px] tracking-widest text-muted uppercase font-mono">
+              Admin Console
+            </span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[11px] font-mono text-muted truncate max-w-[96px]">
+              {user?.email}
+            </span>
+            <button
+              onClick={logout}
+              className="text-[11px] font-mono text-muted hover:text-ink uppercase border border-line px-2 py-1 rounded transition-colors"
+            >
+              Exit
+            </button>
+          </div>
+        </div>
+        <nav className="flex gap-1.5 px-3 pb-2.5 overflow-x-auto">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              end={link.end}
+              className={({ isActive }) =>
+                `whitespace-nowrap px-3 py-1.5 text-[11px] font-mono tracking-wider uppercase rounded border transition-colors ${
+                  isActive
+                    ? "bg-ink text-paper border-ink font-medium"
+                    : "text-muted border-line hover:text-ink"
+                }`
+              }
+            >
+              {link.label}
+            </NavLink>
+          ))}
+        </nav>
+      </header>
+
+      {/* Desktop sidebar */}
+      <aside className="hidden md:flex w-64 border-r border-line bg-surface/40 flex-col justify-between shrink-0">
         <div>
           {/* Brand header */}
           <div className="p-6 border-b border-line flex items-center justify-between">

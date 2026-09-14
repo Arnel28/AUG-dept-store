@@ -66,8 +66,80 @@ export default function AdminOrders() {
         </div>
       )}
 
-      {/* Orders Table */}
-      <div className="border border-line rounded overflow-hidden bg-surface/20">
+      {/* Mobile card list */}
+      <div className="md:hidden space-y-3">
+        {loading ? (
+          <div className="p-8 text-center text-muted text-xs font-mono border border-line rounded bg-surface/20">
+            Loading order logs...
+          </div>
+        ) : orders.length === 0 ? (
+          <div className="p-8 text-center text-muted text-xs font-mono border border-line rounded bg-surface/20">
+            No orders recorded in the system yet.
+          </div>
+        ) : (
+          orders.map((order) => (
+            <div
+              key={order.id}
+              className="border border-line rounded bg-surface/20 p-4 space-y-3 font-mono"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="text-ink font-medium text-sm">#{order.id.slice(-8)}</p>
+                  <p className="text-[11px] text-muted mt-0.5">
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+                <p className="text-ink font-medium text-sm shrink-0">
+                  {formatCents(order.total)}
+                </p>
+              </div>
+
+              <div className="text-[11px]">
+                <p className="text-ink">
+                  {order.shippingName || order.user?.name || "Customer"}
+                </p>
+                <p className="text-muted">{order.email}</p>
+                <p className="text-muted/70">
+                  {order.shippingCity || "—"}, {order.shippingCountry || "—"} ·{" "}
+                  {order.items?.length || 0} unit(s)
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between gap-2">
+                <select
+                  disabled={updatingId === order.id}
+                  value={order.status}
+                  onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                  className={`text-[11px] font-mono uppercase px-2 py-1.5 rounded border outline-none bg-paper cursor-pointer transition-colors ${
+                    order.status === "paid" || order.status === "complete"
+                      ? "border-emerald-500/50 text-emerald-400"
+                      : order.status === "shipped"
+                      ? "border-blue-500/50 text-blue-400"
+                      : order.status === "pending"
+                      ? "border-amber-500/50 text-amber-400"
+                      : "border-line text-muted"
+                  }`}
+                >
+                  <option value="pending">Pending</option>
+                  <option value="paid">Paid</option>
+                  <option value="shipped">Shipped</option>
+                  <option value="complete">Complete</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+                <button
+                  onClick={() => toggleExpand(order.id)}
+                  className="text-[11px] uppercase border border-line px-3 py-1.5 rounded text-muted hover:text-ink hover:border-ink transition-colors"
+                >
+                  {expandedOrderId === order.id ? "Hide" : "Inspect"}
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Orders Table (desktop) */}
+      <div className="hidden md:block border border-line rounded overflow-hidden bg-surface/20">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-mono">
             <thead className="bg-surface border-b border-line text-muted uppercase">

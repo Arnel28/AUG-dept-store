@@ -189,8 +189,95 @@ export default function AdminProducts() {
         </div>
       )}
 
-      {/* Catalog Table */}
-      <div className="border border-line rounded overflow-hidden bg-surface/20">
+      {/* Mobile card list */}
+      <div className="md:hidden space-y-3">
+        {loading ? (
+          <div className="p-8 text-center text-muted text-xs font-mono border border-line rounded bg-surface/20">
+            Loading store products...
+          </div>
+        ) : products.length === 0 ? (
+          <div className="p-8 text-center text-muted text-xs font-mono border border-line rounded bg-surface/20">
+            No products found. Add your first item above.
+          </div>
+        ) : (
+          products.map((p) => (
+            <div
+              key={p.id}
+              className="border border-line rounded bg-surface/20 p-4 space-y-3"
+            >
+              <div className="flex gap-3">
+                <img
+                  src={p.image}
+                  alt={p.name}
+                  className="w-14 h-16 object-cover rounded bg-surface border border-line shrink-0"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="text-ink font-medium text-sm leading-snug">{p.name}</p>
+                  <p className="text-[11px] text-muted font-mono mt-0.5">{p.category}</p>
+                  <p className="text-ink font-medium text-sm font-mono mt-1">
+                    {formatCents(p.price)}
+                  </p>
+                </div>
+                {p.featured && (
+                  <span className="h-fit text-emerald-400 text-[9px] uppercase border border-emerald-500/30 bg-emerald-500/10 px-1.5 py-0.5 rounded font-mono">
+                    Featured
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                {/* Stock control */}
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`inline-block px-2 py-0.5 rounded text-[11px] font-mono border ${
+                      p.stock <= 5
+                        ? "border-red-500/50 bg-red-500/10 text-red-400 font-semibold"
+                        : "border-line bg-surface text-ink"
+                    }`}
+                  >
+                    {p.stock} in stock
+                  </span>
+                  <button
+                    disabled={updatingStockId === p.id || p.stock <= 0}
+                    onClick={() => handleQuickStockChange(p.id, -1)}
+                    className="w-6 h-6 rounded border border-line text-muted hover:text-ink hover:border-ink flex items-center justify-center transition-colors disabled:opacity-30"
+                    title="Decrease stock by 1"
+                  >
+                    −
+                  </button>
+                  <button
+                    disabled={updatingStockId === p.id}
+                    onClick={() => handleQuickStockChange(p.id, 5)}
+                    className="w-6 h-6 rounded border border-line text-muted hover:text-ink hover:border-ink flex items-center justify-center transition-colors disabled:opacity-30"
+                    title="Restock +5"
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleOpenEdit(p)}
+                    className="px-3 py-1 text-[11px] uppercase border border-line text-muted hover:text-ink hover:border-ink rounded transition-colors font-mono"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteProduct(p.id, p.name)}
+                    className="px-3 py-1 text-[11px] uppercase border border-red-900/40 text-red-400 hover:border-red-600 rounded transition-colors font-mono"
+                  >
+                    Del
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Catalog Table (desktop) */}
+      <div className="hidden md:block border border-line rounded overflow-hidden bg-surface/20">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-mono">
             <thead className="bg-surface border-b border-line text-muted uppercase">
