@@ -31,11 +31,13 @@ router.post("/register", async (req, res) => {
       .status(409)
       .json({ error: "An account with that email already exists." });
 
+  const userCount = await prisma.user.count();
   const user = await prisma.user.create({
     data: {
       email: email.toLowerCase(),
       name: name.trim(),
       passwordHash: await hashPassword(password),
+      isAdmin: userCount === 0,
     },
   });
 
