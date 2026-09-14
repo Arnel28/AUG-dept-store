@@ -1,0 +1,62 @@
+// Prisma schema for Verve store (SQLite)
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  isAdmin      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  orders       Order[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  price       Int // price in cents
+  category    String
+  image       String
+  sizes       String // comma-separated, e.g. "S,M,L,XL"
+  stock       Int      @default(100)
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  orderItems  OrderItem[]
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  user            User?       @relation(fields: [userId], references: [id])
+  userId          String?
+  email           String
+  total           Int // total in cents
+  status          String      @default("pending") // pending | paid
+  stripeSessionId String?
+  shippingName    String
+  shippingAddress String
+  shippingCity    String
+  shippingZip     String
+  shippingCountry String
+  createdAt       DateTime    @default(now())
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  name      String
+  price     Int // unit price in cents at time of purchase
+  size      String
+  quantity  Int
+}

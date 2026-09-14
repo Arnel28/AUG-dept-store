@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(echo \"=== winget ===\"; which winget 2>&1; ls \"/c/Users/Administrator/AppData/Local/Microsoft/WindowsApps/winget.exe\" 2>&1 *)",
+      "Bash(winget install *)",
+      "Bash(\"/c/Program Files/nodejs/node.exe\" --version)",
+      "Bash(\"/c/Program Files/nodejs/npm.cmd\" --version)"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Verve Web",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\npm.cmd",
+      "runtimeArgs": ["--prefix", "C:\\Users\\Administrator\\Desktop\\AUG\\web", "run", "dev"],
+      "port": 5173
+    }
+  ]
+}

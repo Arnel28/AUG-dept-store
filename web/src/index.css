@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display tracking-tightest;
+  }
+
+  ::selection {
+    background: theme("colors.accent");
+    color: black;
+  }
+
+  /* Visible keyboard focus everywhere */
+  :focus-visible {
+    outline: 2px solid theme("colors.accent");
+    outline-offset: 2px;
+  }
+
+  a {
+    color: inherit;
+  }
+}
+
+@layer components {
+  .wrap {
+    @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm font-medium
+      transition-colors duration-200 select-none disabled:opacity-40 disabled:pointer-events-none;
+  }
+
+  .btn-primary {
+    @apply btn bg-ink text-paper hover:bg-accent hover:text-paper;
+  }
+
+  .btn-outline {
+    @apply btn border border-ink text-ink hover:bg-ink hover:text-paper;
+  }
+
+  .btn-ghost {
+    @apply btn px-3 py-2 text-ink hover:text-accent;
+  }
+
+  .field {
+    @apply w-full border border-line bg-surface px-4 py-3 text-[15px] text-ink
+      placeholder:text-muted focus:border-ink focus:outline-none transition-colors;
+  }
+
+  .label {
+    @apply mb-2 block text-sm font-medium text-graphite;
+  }
+
+  /* Editorial link with an underline that draws in on hover */
+  .ul {
+    @apply relative inline-block after:absolute after:-bottom-0.5 after:left-0 after:h-px
+      after:w-full after:origin-right after:scale-x-0 after:bg-current
+      after:transition-transform after:duration-300 hover:after:origin-left hover:after:scale-x-100;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
