@@ -34,11 +34,17 @@ router.get("/", async (req, res) => {
     ];
   }
 
-  const products = await prisma.product.findMany({
-    where,
-    orderBy: { createdAt: "asc" },
-  });
-  res.json(products.map(serialize));
+  try {
+    const products = await prisma.product.findMany({
+      where,
+      orderBy: { createdAt: "asc" },
+    });
+    console.log(`Public products fetched: ${products.length}`);
+    res.json(products.map(serialize));
+  } catch (error) {
+    console.error('Error fetching public products:', error);
+    res.status(500).json({ error: 'Failed to fetch products' });
+  }
 });
 
 // GET /api/products/categories  (defined before :id)

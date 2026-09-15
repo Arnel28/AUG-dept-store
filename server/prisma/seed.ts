@@ -173,17 +173,18 @@ const products: Seed[] = [
 ];
 
 async function main() {
-  console.log("Clearing existing catalog + orders...");
-  await prisma.orderItem.deleteMany();
-  await prisma.order.deleteMany();
-  await prisma.product.deleteMany();
+  const existing = await prisma.product.count();
+  if (existing > 0) {
+    console.log(`Catalog already has ${existing} products — skipping seed ✔`);
+    return;
+  }
 
   console.log(`Seeding ${products.length} products...`);
   for (const p of products) {
     await prisma.product.create({ data: p });
   }
 
-  console.log("Seed complete ✔");
+  console.log(`Seed complete ✔ (${products.length} products created)`);
 }
 
 main()

@@ -6,6 +6,11 @@
       "runtimeExecutable": "C:\\Program Files\\nodejs\\npm.cmd",
       "runtimeArgs": ["--prefix", "C:\\Users\\Administrator\\Desktop\\AUG\\web", "run", "dev"],
       "port": 5173
+    },
+    {
+      "name": "Express Server",
+      "url": "http://localhost:4000",
+      "port": 4000
     }
   ]
 }

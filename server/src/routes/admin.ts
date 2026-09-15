@@ -59,10 +59,16 @@ router.get("/stats", async (_req: AuthedRequest, res) => {
 
 // GET /api/admin/products
 router.get("/products", async (_req: AuthedRequest, res) => {
-  const products = await prisma.product.findMany({
-    orderBy: { createdAt: "desc" },
-  });
-  res.json(products.map(serializeProduct));
+  try {
+    const products = await prisma.product.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    console.log(`Admin fetched ${products.length} products`);
+    res.json(products.map(serializeProduct));
+  } catch (error) {
+    console.error('Error fetching admin products:', error);
+    res.status(500).json({ error: 'Failed to fetch products' });
+  }
 });
 
 // POST /api/admin/products
